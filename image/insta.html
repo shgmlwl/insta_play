@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <title>caffee_real</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        /*     background: black; */
+      }
+      .coffee {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 12px;
+      }
+      
+      /* 하늘 배경 */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -1; /* 뒤로 가야하니까 */
+  overflow: hidden;
+}
+.background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: black;       /* 흰색 레이어 */
+  opacity: 0.2;            /* 투명도 */
+  pointer-events: none;
+  z-index: 1;
+}
+.background::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.24);
+   backdrop-filter: brightness(1.08) saturate(0.92); 
+  pointer-events: none;
+  z-index: 1;
+}
+.sky_layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  border: 0;
+  /*  opacity: 0; */
+  transition: opacity 1.2s ease;
+  pointer-events: none; /* 배경은 클릭해도 뭐 없으니까 */
+}
+/* time_bar */
+#time {
+  position: fixed;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.28),
+    rgba(255, 255, 255, 0.16)
+  );
+  backdrop-filter: blur(10px) saturate(190%) brightness(0.95);
+  -webkit-backdrop-filter: blur(10px) saturate(110%) brightness(0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 12px rgba(62, 62, 62, 0.06),
+    inset 0 1px rgba(255, 255, 255, 0.35);
+  padding: 10px 40px;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  display: flex;
+  z-index: 1;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  letter-spacing: 0.9px; /* 단위 추가 */
+  color: white;
+}
+#time > div {
+  width: 100px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#icon {
+  width: 20px;
+  height: 20px;
+}
+#time > a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  justify-content: center;
+}
+/* 하트 */
+#heart_icon {
+  position: fixed;       /* 화면에 고정 */
+  bottom: 25px;          /* 하단에서 20px 위 */
+  left: 50%;             /* 가로 중앙 기준점 */
+  transform: translateX(-50%); /* 정확히 중앙 정렬 */
+  font-size: 30px;       /* 원하는 크기 */
+  cursor: pointer;
+  color: white;
+  z-index: 999;
+
+}
+#heart_icon:hover{
+    color: rgba(210, 210, 210, 0.7);
+}
+
+
+#close_icon{
+    position: fixed;       /* 화면에 고정 */
+  top: 45px;
+  right: 50px;
+  font-size: 25px;       /* 원하는 크기 */
+  cursor: pointer;
+  color: white;
+    font-variation-settings:
+    'FILL' 0,   /* 0=비어 있음(Outlined), 1=채움(Filled) */
+    'wght' 350, /* 굵기 (100~700; 기본 400) */
+    'GRAD' 0,
+    'opsz' 48;  /* Optical size */
+}
+
+/* ====================================== */
+/* 반응형 */
+/* 최소 1800px ~ (width = 360) */
+@media (min-width: 1800px) {
+  #time {
+    font-size: 19px;
+  }
+
+  .cube {
+    width: 420px;
+    height: 560px;
+  }
+
+  #img_collect .cube_c:not(#cube_5):not(#cube_6) {
+    width: 420px;
+    height: 560px;
+  }
+
+  /* 깊이(앞/뒤/좌/우) = 360 * 11/15 = 264 */
+  #cube_1 {
+    transform: translateZ(308px);
+  }
+  #cube_2 {
+    transform: rotateY(180deg) translateZ(308px);
+  }
+  #cube_3 {
+    transform: rotateY(90deg) translateZ(308px);
+  }
+  #cube_4 {
+    transform: rotateY(-90deg) translateZ(308px);
+  }
+
+  /* 위/아래 면 = 420 x 420, 깊이 = 364 */
+  #cube_5,
+  #cube_6 {
+    width: 420px;
+    height: 420px;
+  }
+  #cube_5 {
+    transform: rotateX(90deg) translateZ(364px);
+  }
+  #cube_6 {
+    transform: rotateX(-90deg) translateZ(364px);
+  }
+}
+
+/* 최소 1500px ~ (width = 360) */
+@media (min-width: 1500px) {
+  #time {
+    font-size: 16px;
+  }
+
+}
+
+/* ~1280px (width = 270) */
+@media (max-width: 1280px) {
+  #time {
+    font-size: 14px;
+  }
+}
+
+/* ~1080px (width = 240) */
+@media (max-width: 1080px) {
+  #time {
+    font-size: 14px;
+  }
+}
+
+/* ~640px (width = 210) */
+@media (max-width: 640px) {
+  #time {
+    font-size: 13px;
+    padding: 10px 30px;
+  }
+
+}
+
+/* ~430px (width = 150) */
+@media (max-width: 430px) {
+  #time {
+    font-size: 12px;
+    padding: 8px 20px;
+  }
+
+}
+
+
+    </style>
+  </head>
+  <body>
+    <div id="layout">
+      <div class="coffee"></div>
+            </div>
+       <div>
+        <div id="time">
+          <div>
+             <img src="image/insta_logo.png" id="icon" />
+            <p>Insta</p>
+          </div>
+          <a>
+            <p id="date">8월 25일</p>
+            <p id="pm">오후</p>
+            <p id="clock">7:20</p></a
+          >
+   
+        </div>
+      <div class="background">
+        <iframe id="sky_frame_1" class="sky_layer"></iframe>
+        <iframe id="sky_frame_2" class="sky_layer"></iframe>
+    </div>
+    <span class="material-symbols-outlined" id="heart_icon">favorite</span>
+    <span class="material-symbols-outlined"  id="close_icon">close</span>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        /* ===================== 옵션 ===================== */
+        const USE_COLOR = false; // true: 픽셀색, false: 흑백(추천)
+        const REPLACE_SPACE = true; // 공백을 '·'로 대체
+        const DENSITY = 2.2; // 격자 밀도 (1.6~2.4 권장)
+        const GAMMA = 1.7; // 대비 곡선(1.2~1.9)
+        const dark = 0.6; // 가장 어두운 셀 비율
+        const dark_extra = 0.85; // 어두운 셀 덧칠 강도
+
+        // 마우스 물리 파라미터
+        const SPRING_K = 0.12; // 원위치로 잡아당기는 힘
+        const DAMPING = 0.86; // 감쇠(0~1)
+        const PUSH_STRENGTH = 9; // 마우스 반발 세기(↑ 더 크게 튐)
+        const PUSH_RADIUS = 120; // 마우스 영향 반경(px, scaleFactor 곱해 적용)
+        /* ================================================= */
+
+        let img;
+        let baseStepX = 8; // 원본 기준 가로 간격(px)
+        let baseStepY = 12; // 원본 기준 세로 간격(px)
+        let tick = 0;
+        let text_speed = 15;
+
+        // 반응형
+        let cnv,
+          scaleFactor = 1;
+        let viewW = 0,
+          viewH = 0;
+
+        // 격자/셀 캐시
+        let stepX = 8,
+          stepY = 20,
+          cols = 0,
+          rows = 0;
+        // 각 셀: {dx,dy,r,g,b,bright, px,py, vx,vy}
+        let cells = [];
+        let sortedIdx = [];
+
+        const poem = [
+          "유리창 너머로 오후 햇살이 길게 드리워졌다.",
+          "카페 안은 잔잔한 음악과 함께 커피 향이 천천히 퍼지고 있었다.",
+          "자리를 잡고 앉자, 뜨거운 머그잔이 손바닥을 따뜻하게 감쌌다.",
+          "커피의 쓴맛과 달콤한 빵 한 조각이 묘하게 어울려, 오늘 하루의 작은 위로처럼 느껴졌다.",
+          "옆자리에서는 누군가 조용히 책장을 넘기고, 다른 쪽에서는 친구들이 웃음을 터뜨렸다.",
+          "각자의 이야기가 뒤섞여 흘러가지만, 그 속에서 오히려 고요함이 만들어졌다.",
+          "잠시 핸드폰을 내려두고, 커피 위로 피어오르는 얇은 김을 바라본다.",
+          "무심히 흘러가는 시간 속에서, 아무것도 하지 않아도 괜찮은 순간이 여기에 있다는 사실이 마음을 놓이게 한다.",
+        ];
+        const all = poem.join("");
+
+    
+  function preload() {
+          img = loadImage("image/cafe/coffee_1.jpeg"); // 이미지 경로 확인!
+           
+        }
+        function setup() {
+          pixelDensity(Math.min(2, window.devicePixelRatio || 1));
+          computeCanvasSize();
+          cnv = createCanvas(viewW, viewH);
+          cnv.parent(document.querySelector(".coffee"));
+
+          textFont("Nanum Gothic Coding");
+          textStyle(BOLD);
+          textAlign(LEFT, BASELINE);
+          noStroke();
+
+          img.loadPixels();
+          rebuildGrid();
+        }
+
+        function draw() {
+          background(255);
+
+          // 살짝 흘러가게(정지 원하면 주석)
+          if (frameCount % text_speed === 0 && sortedIdx.length) {
+            tick = (tick + 1) % sortedIdx.length;
+          }
+          if (!sortedIdx.length) return;
+
+          // 글자 크기(격자에 맞춤)
+          const tsize = Math.min(stepX, stepY) * 0.92;
+          textSize(tsize);
+
+          // 정확한 세로 중앙 정렬(폰트 변경에도 안전)
+          const ascent = textAscent();
+          const descent = textDescent();
+          const baselineShift = (stepY - (ascent + descent)) / 2 + ascent;
+
+          const totalCells = sortedIdx.length;
+          const totalChars = all.length;
+
+          // 마우스 반지름(반응형 스케일 반영)
+          const R = PUSH_RADIUS * scaleFactor;
+
+          // 1) 전체 셀 1패스: 물리 업데이트 + 텍스트 렌더
+          for (let i = 0; i < totalCells; i++) {
+            const ci = sortedIdx[(i + tick) % totalCells]; // 어두운→밝은
+            const cell = cells[ci];
+
+            // --- 물리 업데이트 ---
+            // 현재 셀 중심 좌표
+            const cx = cell.dx + stepX / 2;
+            const cy = cell.dy + stepY / 2;
+
+            // 스프링(원위치 복귀)
+            let fx = -cell.px * SPRING_K;
+            let fy = -cell.py * SPRING_K;
+
+            // 마우스 반발(가까울수록 강함)
+            const mx = mouseX - (cx + cell.px);
+            const my = mouseY - (cy + cell.py);
+            const d = Math.hypot(mx, my);
+            if (d > 0 && d < R) {
+              const nX = mx / d,
+                nY = my / d; // 방향
+              const power = (1 - d / R) * PUSH_STRENGTH;
+              fx -= nX * power;
+              fy -= nY * power;
+            }
+
+            // 속도/위치 갱신 + 감쇠
+            cell.vx = (cell.vx + fx) * DAMPING;
+            cell.vy = (cell.vy + fy) * DAMPING;
+            cell.px += cell.vx;
+            cell.py += cell.vy;
+
+            // --- 렌더 ---
+            const raw = all.charAt(i % totalChars);
+            const ch = REPLACE_SPACE && raw.trim().length === 0 ? "·" : raw;
+
+            // 밝기(0~1) → 알파
+            const b = cell.bright; // 0=어두움
+            const aMin = 20,
+              aMax = 180;
+            const contrast = Math.pow(1 - b, GAMMA);
+            const alpha = aMin + (aMax - aMin) * contrast;
+
+            if (USE_COLOR) fill(cell.r, cell.g, cell.b, alpha);
+            else fill(0, 0, 0, alpha);
+
+            // 중앙 정렬 + 물리 오프셋
+            const tx = cell.dx + cell.px + (stepX - textWidth(ch)) / 2;
+            const ty = cell.dy + cell.py + baselineShift;
+            text(ch, tx, ty);
+          }
+
+          // 2) 가장 어두운 일부 셀 덧칠: 대비/윤곽 강화 (동일 오프셋 적용)
+          const dark_count = Math.floor(totalCells * dark);
+          for (let k = 0; k < dark_count; k++) {
+            const ci = sortedIdx[k];
+            const cell = cells[ci];
+
+            const raw = all.charAt(k % totalChars);
+            const ch = REPLACE_SPACE && raw.trim().length === 0 ? "·" : raw;
+
+            const b = cell.bright;
+            const aMin = 26,
+              aMax = 255;
+            const contrast = Math.pow(1 - b, GAMMA);
+            let alpha = aMin + (aMax - aMin) * contrast;
+            alpha = Math.min(255, alpha * (1 + dark_extra));
+
+            if (USE_COLOR) fill(cell.r, cell.g, cell.b, alpha);
+            else fill(0, 0, 0, alpha);
+
+            const tx = cell.dx + cell.px + (stepX - textWidth(ch)) / 2;
+            const ty = cell.dy + cell.py + baselineShift;
+            text(ch, tx, ty);
+          }
+        }
+
+        /* ========== 격자/밝기 구성 ========== */
+        function rebuildGrid() {
+          // 1) 스텝 초기화(반응형 스케일 반영)
+          stepX = baseStepX * scaleFactor;
+          stepY = baseStepY * scaleFactor;
+
+          cols = Math.max(1, Math.floor(width / stepX));
+          rows = Math.max(1, Math.floor(height / stepY));
+          let count = cols * rows;
+
+          // 2) 목표 셀 수: DENSITY × 글자 수
+          const target = Math.max(1, Math.floor(all.length * DENSITY));
+          if (count < target) {
+            const factor = Math.sqrt(target / Math.max(1, count));
+            stepX = Math.max(3, stepX / factor);
+            stepY = Math.max(3, stepY / factor);
+            cols = Math.max(1, Math.floor(width / stepX));
+            rows = Math.max(1, Math.floor(height / stepY));
+          }
+
+          // 3) 셀 생성 + 밝기(0~1) 계산
+          cells = [];
+          for (let r = 0; r < rows; r++) {
+            const dy = r * stepY;
+            for (let c = 0; c < cols; c++) {
+              const dx = c * stepX;
+
+              // 화면→원본 역변환(축소시 floor가 안정적)
+              const sx = Math.min(img.width - 1, Math.floor(dx / scaleFactor));
+              const sy = Math.min(img.height - 1, Math.floor(dy / scaleFactor));
+              const arr = img.get(sx, sy); // [r,g,b,a]
+
+              const r8 = arr[0],
+                g8 = arr[1],
+                b8 = arr[2];
+              // 간단 휘도(0~1) — 필요하면 표준식으로 교체 가능
+              const bright = (0.4126 * r8 + 0.6152 * g8 + 0.2722 * b8) / 255;
+
+              cells.push({
+                dx,
+                dy,
+                r: r8,
+                g: g8,
+                b: b8,
+                bright,
+                px: 0,
+                py: 0,
+                vx: 0,
+                vy: 0, // 물리 초기값
+              });
+            }
+          }
+
+          // 4) 어두운→밝은 정렬
+          sortedIdx = Array.from({ length: cells.length }, (_, i) => i).sort(
+            (i, j) => cells[i].bright - cells[j].bright
+          );
+        }
+
+        /* ========== 반응형 ========== */
+        function computeCanvasSize() {
+          const maxW = window.innerWidth * 0.9;
+          const maxH = window.innerHeight * 0.8;
+          scaleFactor = Math.min(maxW / img.width, maxH / img.height, 1);
+          viewW = Math.round(img.width * scaleFactor);
+          viewH = Math.round(img.height * scaleFactor);
+        }
+
+        function windowResized() {
+          computeCanvasSize();
+          resizeCanvas(viewW, viewH);
+          rebuildGrid();
+        }
+
+        /* ========== p5 전역 등록 ========== */
+        window.preload = preload;
+        window.setup = setup;
+        window.draw = draw;
+        window.windowResized = windowResized;
+
+
+        /* 시간/배경 */
+        (() => {
+  /* ====== 시계/배경 모듈 시작 ====== */
+  const clockEl = document.querySelector("#clock");
+  const dateEl  = document.querySelector("#date");
+  const pmEl    = document.querySelector("#pm");
+
+  const layer1 = document.querySelector("#sky_frame_1");
+  const layer2 = document.querySelector("#sky_frame_2");
+  const layers = [layer1, layer2];
+
+  let active = 0;
+  let current = null;   // 현재 적용된 배경 키 (html 파일 이름)
+  let t = new Date();
+
+  const time_background = [
+    { id: "sky",      html: "sky.html",      range: [6, 17] },
+    { id: "sky_dark", html: "sky_dark.html", range: [17, 20] },
+    { id: "night",    html: "night.html",    range: [20, 24] },
+    { id: "dawn",     html: "sky_dark.html", range: [0, 6] },
+  ];
+  const pick_slot = (h) =>
+    time_background.find((s) => h >= s.range[0] && h < s.range[1]);
+
+  const follow_fake = true;      // 가짜 시계에 맞춰 배경도 바뀌게
+  const force_bg = null;         // 'sky' | 'sky_dark' | 'night' | 'dawn' 넣으면 고정
+  const clock_mode = "random";   // 'random' | 'step'
+
+  // 초기 1회 세팅
+  (function initFirst() {
+    const h = new Date().getHours();
+    const first = (force_bg ? time_background.find((s) => s.id === force_bg) : pick_slot(h)).html;
+    layers[active].src = first;
+    layers[active].style.opacity = 1;
+    current = first;
+  })();
+
+  function fading(src) {
+    if (current === src) return;
+    const now  = layers[active];
+    const next = layers[1 - active];
+
+    next.onload = () => {
+      next.style.opacity = 1;
+      now.style.opacity = 0;
+      active  = 1 - active;
+      current = src;
+      next.onload = null;
+    };
+    if (next.src !== src) next.src = src;
+    else if (typeof next.onload === "function") next.onload();
+  }
+
+  function tick() {
+    const real = new Date();
+    const month = String(real.getMonth() + 1).padStart(2, "0");
+    const day   = String(real.getDate()).padStart(2, "0");
+    const weekday = new Intl.DateTimeFormat("ko-KR", {
+      weekday: "short",
+      timeZone: "Asia/Seoul",
+    }).format(real);
+    if (dateEl) dateEl.textContent = `${month}월${day}일 (${weekday})`;
+
+    let h24, mm;
+    if (clock_mode === "random") {
+      const fake_m = Math.floor(Math.random() * 1440);
+      h24 = Math.floor(fake_m / 60);
+      mm  = String(fake_m % 60).padStart(2, "0");
+    } else {
+      const r = Math.random();
+      const delta_min = r < 0.1 ? (Math.random() < 0.5 ? -14 : 14)
+                      : r < 0.6 ? (Math.random() < 0.5 ? -2 : 2)
+                      : 1;
+      t = new Date(t.getTime() + delta_min * 60 * 1000);
+      h24 = t.getHours();
+      mm  = String(t.getMinutes()).padStart(2, "0");
+    }
+    const ampm = h24 >= 12 ? "오후" : "오전";
+    const h12  = String(h24 % 12 || 12).padStart(2, "0");
+    if (pmEl)    pmEl.textContent    = ampm;
+    if (clockEl) clockEl.textContent = `${h12} : ${mm}`;
+
+    const slot = force_bg
+      ? time_background.find((s) => s.id === force_bg)
+      : pick_slot(follow_fake ? h24 : real.getHours());
+    if (!slot) return;
+
+    const next_key = slot.html;
+    if (current !== next_key) fading(next_key);
+  }
+
+  tick();
+  setInterval(tick, 5500);
+  /* ====== 시계/배경 모듈 끝 ====== */
+    const heart = document.querySelector("#heart_icon");
+  heart.addEventListener('mouseenter', () => {
+  gsap.to(heart, { scale: 1.12, duration: 0.16, overwrite: true });
+});
+heart.addEventListener('mouseleave', () => {
+  gsap.to(heart, { scale: 1.0, duration: 0.16, overwrite: true });
+});
+})();
+window.preload = preload;
+window.setup = setup;
+window.draw = draw;
+window.windowResized = windowResized;
+  });//js end
+    </script>
+    <script src="js/insta.js"></script>
+  </body>
+</html>
