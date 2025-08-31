@@ -234,5 +234,5 @@
 const close_icon = document.querySelector("#close_icon");
 console.log(close_icon);
 close_icon.addEventListener("click", () => {
-  location.href = "/main.html";
+  location.href = "https://shgmlwl.github.io/insta_main_page/";
 });
