@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -73,7 +74,7 @@
     rgba(255, 255, 255, 0.28),
     rgba(255, 255, 255, 0.16)
   );
-  backdrop-filter: blur(10px) saturate(190%) brightness(0.90);
+  backdrop-filter: blur(10px) saturate(190%) brightness(0.95);
   -webkit-backdrop-filter: blur(10px) saturate(110%) brightness(0.95);
   border-bottom: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 2px 12px rgba(62, 62, 62, 0.06),
@@ -88,8 +89,11 @@
   align-items: center;
   justify-content: space-between;
   font-size: 15px;
-  letter-spacing: 0.9px; /* 단위 추가 */
+  letter-spacing: 0.85px; /* 단위 추가 */
   color: white;
+}
+#insta {
+  font-weight: 700;
 }
 #time > div {
   width: 100px;
@@ -108,122 +112,181 @@
   width: auto;
   justify-content: center;
 }
+#date,
+#pm,
+#clock {
+  font-size: inherit; /* 부모 폰트 크기 따라감 */
+}
+
+#icon {
+  width: 20px;
+  height: 20px;
+}
+#time > a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  justify-content: center;
+}
 /* 하트 */
 #heart_icon {
-  position: fixed;       /* 화면에 고정 */
-  bottom: 25px;          /* 하단에서 20px 위 */
-  left: 50%;             /* 가로 중앙 기준점 */
-  transform: translateX(-50%); /* 정확히 중앙 정렬 */
-  font-size: 30px;       /* 원하는 크기 */
+  position: fixed;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px)); /* iOS 홈바 대응 */
+  transform: translateX(-50%);
+  font-size: clamp(22px, 2.0vw + 8px, 40px);  /* 화면 크기에 따른 스케일 */
   cursor: pointer;
   color: white;
   z-index: 999;
-
+  line-height: 1;
+  padding: 8px; /* 터치 타깃 확대(시각적 변화 최소) */
+  -webkit-tap-highlight-color: transparent;
 }
 #heart_icon:hover{
-    color: rgba(210, 210, 210, 0.7);
+  color: rgba(210, 210, 210, 0.7);
 }
 
-
-#close_icon{
-    position: fixed;       /* 화면에 고정 */
-  top: 45px;
-  right: 50px;
-  font-size: 25px;       /* 원하는 크기 */
+/* 닫기 아이콘 */
+#close_icon {
+  position: fixed;
+  /* 상단 바(#time)가 30~35px라 여유 주고, 화면 크기에 따라 살짝 가변 */
+  top: clamp(36px, 3.2vw, 64px);
+  right: clamp(14px, 2.2vw, 48px);
+  font-size: clamp(20px, 1.2vw + 10px, 34px); /* 화면 크기에 따른 스케일 */
   cursor: pointer;
   color: white;
-    font-variation-settings:
-    'FILL' 0,   /* 0=비어 있음(Outlined), 1=채움(Filled) */
-    'wght' 350, /* 굵기 (100~700; 기본 400) */
+  z-index: 999;
+  line-height: 1;
+  padding: 6px; /* 터치 타깃 확대 */
+  -webkit-tap-highlight-color: transparent;
+
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 350,
     'GRAD' 0,
-    'opsz' 48;  /* Optical size */
+    'opsz' 48;
 }
 
 /* ====================================== */
 /* 반응형 */
-/* 최소 1800px ~ (width = 360) */
-@media (min-width: 1800px) {
+/* 반응형 */
+
+/* ~430px (width = 150) */
+@media (max-width: 430px) {
   #time {
-    font-size: 19px;
-  }
-
-  .cube {
-    width: 420px;
-    height: 560px;
-  }
-
-  #img_collect .cube_c:not(#cube_5):not(#cube_6) {
-    width: 420px;
-    height: 560px;
-  }
-
-  /* 깊이(앞/뒤/좌/우) = 360 * 11/15 = 264 */
-  #cube_1 {
-    transform: translateZ(308px);
-  }
-  #cube_2 {
-    transform: rotateY(180deg) translateZ(308px);
-  }
-  #cube_3 {
-    transform: rotateY(90deg) translateZ(308px);
-  }
-  #cube_4 {
-    transform: rotateY(-90deg) translateZ(308px);
-  }
-
-  /* 위/아래 면 = 420 x 420, 깊이 = 364 */
-  #cube_5,
-  #cube_6 {
-    width: 420px;
-    height: 420px;
-  }
-  #cube_5 {
-    transform: rotateX(90deg) translateZ(364px);
-  }
-  #cube_6 {
-    transform: rotateX(-90deg) translateZ(364px);
-  }
-}
-
-/* 최소 1500px ~ (width = 360) */
-@media (min-width: 1500px) {
-  #time {
-    font-size: 16px;
+    font-size: 10px; /* ↓ 살짝 축소 */
+    padding: 8px 20px;
   }
 
 }
 
-/* ~1280px (width = 270) */
-@media (max-width: 1280px) {
+/* ~640px (width = 210) */
+@media (max-width: 640px) {
   #time {
-    font-size: 14px;
+    font-size: 8px;
+    padding: 10px 30px;
+  }
+  #insta,
+  #date,
+  #pm,
+  #clock {
+    font-size: 8px;
   }
 }
 
 /* ~1080px (width = 240) */
 @media (max-width: 1080px) {
   #time {
-    font-size: 14px;
+    font-size: 11px; /* 유지 */
+  }
+
+  #insta,
+  #date,
+  #pm,
+  #clock {
+    font-size: 11px; /* 유지 */
   }
 }
-
-/* ~640px (width = 210) */
-@media (max-width: 640px) {
+/* ~1280px (width = 270) */
+@media (max-width: 1280px) {
   #time {
-    font-size: 13px;
-    padding: 10px 30px;
+    font-size: 12px; /* 유지 */
+  }
+
+  #insta,
+  #date,
+  #pm,
+  #clock {
+    font-size: 12px; /* 유지 */
+  }
+
+  .cube {
+    width: 270px;
+    height: 360px;
   }
 
 }
-
-/* ~430px (width = 150) */
-@media (max-width: 430px) {
+@media (min-width: 1281px) and (max-width: 1499px) {
   #time {
-    font-size: 12px;
-    padding: 8px 20px;
+    font-size: 14px; /* ↑ 1200대(12px)보다 큼 */
   }
 
+  #insta,
+  #date,
+  #pm,
+  #clock {
+    font-size: 14px; /* ↑ */
+  }
+
+
 }
+/* 최소 1500px ~ (width = 360) */
+@media (min-width: 1500px) and (max-width: 1799px) {
+  #time {
+    font-size: 17px; /* ↓ 과했던 20px → 17px */
+  }
+  #insta,
+  #date,
+  #pm,
+  #clock {
+    font-size: 17px; /* ↓ */
+  }
+}
+/* 최소 1800px ~ (width = 360) */
+@media (min-width: 1800px) {
+  #time {
+    font-size: 18px; /* ↓ 21px → 18px */
+    height: 35px;
+  }
+
+  #insta,
+  #date,
+  #pm,
+  #clock {
+    font-size: 18px; /* ↓ */
+  }
+ 
+}
+
+/* 터치 환경에선 살짝 더 크게 */
+@media (pointer: coarse) {
+  #heart_icon { font-size: clamp(24px, 3.2vw + 8px, 44px); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
+  #close_icon { font-size: clamp(22px, 1.8vw + 12px, 36px); }
+}
+
+/* 초소형 폭(<=360px)에서 여백 조정 */
+@media (max-width: 360px) {
+  #heart_icon { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+  #close_icon { top: 36px; right: 12px; }
+}
+
+/* 초대형(>=1800px)에서 살짝 키우고 여백 여유 */
+@media (min-width: 1800px) {
+  #heart_icon { bottom: calc(28px + env(safe-area-inset-bottom, 0px)); }
+  #close_icon { top: 56px; right: 40px; }
+}
+
 
 
     </style>
