@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-    <title>insta_jeju</title>
+    <title>insta_play</title>
     <style>
       * {
         margin: 0;
@@ -170,7 +170,6 @@
 
 /* ====================================== */
 /* 반응형 */
-/* 최소 1800px ~ (width = 360) */
 /* 반응형 */
 
 /* ~430px (width = 150) */
@@ -288,6 +287,8 @@
   #close_icon { top: 56px; right: 40px; }
 }
 
+
+
     </style>
   </head>
   <body>
@@ -297,7 +298,7 @@
        <div>
         <div id="time">
           <div>
-            <img src="image/insta_logo.png" id="icon" />
+             <img src="image/insta_logo.png" id="icon" />
             <p>Insta</p>
           </div>
           <a>
@@ -321,7 +322,7 @@
         const REPLACE_SPACE = true; // 공백을 '·'로 대체
         const DENSITY = 2.8; // 격자 밀도 (1.6~2.4 권장)
         const GAMMA = 1.7; // 대비 곡선(1.2~1.9)
-        const dark = 0.45; // 가장 어두운 셀 비율
+        const dark = 0.6; // 가장 어두운 셀 비율
         const dark_extra = 0.85; // 어두운 셀 덧칠 강도
 
         // 마우스 물리 파라미터
@@ -353,18 +354,15 @@
         let sortedIdx = [];
 
         const poem = [
-          "일본에서의 하루는 마치 꿈 같았다.",
-          "디즈니랜드에서 동화 속을 걷는 듯 설레었고,",
-          "골목마다 스며든 향긋한 음식들은 마음까지 따뜻하게 채워주었다.",
-          "여행의 맛과 빛이 오래 기억에 남을 것 같다.",
-          "다음에도 꼭 다시 오고 싶은 곳이다.",
-           "@ # % & * . , -",
+          "웃음과 노래가 뒤섞인 밤, 사소한 하루가 오래 기억된다.",
+          "소리와 빛 속에서 흩날린 일상, 그 안에 우리가 있었다.",
+          "가벼운 발걸음이 남긴 흔적들이 모여, 일상의 작은 기록이 된다",
         ];
         const all = poem.join("");
 
     
   function preload() {
-          img = loadImage("image/jeju/jeju_31.jpeg"); // 이미지 경로 확인!
+          img = loadImage("image/play/play_09.jpeg"); // 이미지 경로 확인!
            
         }
         function setup() {
@@ -579,7 +577,7 @@
   let current = null;   // 현재 적용된 배경 키 (html 파일 이름)
   let t = new Date();
 
-  const time_background = [
+   const time_background = [
     { id: "sky",      html: "https://shgmlwl.github.io/insta_background_sky/",      range: [6, 17] },
     { id: "sky_dark", html: "https://shgmlwl.github.io/insta_background/", range: [17, 20] },
     { id: "night",    html: "https://shgmlwl.github.io/insta_background_night/",    range: [20, 24] },
@@ -672,6 +670,6 @@ window.draw = draw;
 window.windowResized = windowResized;
   });//js end
     </script>
-    <script src="js/insta_jeju.js"></script>
+    <script src="js/insta_play.js"></script>
   </body>
 </html>
