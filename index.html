@@ -28,6 +28,29 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
+@font-face {
+  font-family: 'Nanum Gothic Coding Local';
+  src: url('/fonts/NanumGothicCoding-Regular.woff2') format('woff2'),
+       url('/fonts/NanumGothicCoding-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nanum Gothic Coding Local';
+  src: url('/fonts/NanumGothicCoding-Bold.woff2') format('woff2'),
+       url('/fonts/NanumGothicCoding-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root, body {
+  font-family: 'Nanum Gothic Coding Local', system-ui, -apple-system, 'Segoe UI',
+               Roboto, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic',
+               'Helvetica Neue', Arial, sans-serif;
+}
+
       * {
         margin: 0;
         padding: 0;
